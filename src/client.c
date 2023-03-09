@@ -6,20 +6,21 @@
 /*   By: edelage <edelage@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 21:43:00 by edelage           #+#    #+#             */
-/*   Updated: 2023/03/08 21:43:00 by edelage          ###   ########lyon.fr   */
+/*   Updated: 2023/03/09 03:19:35 by edelage          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 #include "my_socket.h"
 #include <netdb.h>
-#include <string.h>
+#include <sys/time.h>
 
-int	main(int argc, char **argv)
+int	main(void)
 {
 	struct hostent		*hostinfo;
-	const char			*ip = "10.12.11.2";
-	const int			port = 14319;
+	const char			*ip = "91.160.127.73";
+	const int			port = 3000;
 	int					socket_client;
 	struct sockaddr_in	addr;
+	struct timeval		time;
 
 	socket_client = socket(AF_INET, SOCK_STREAM, 0);
 	if (socket_client == SOCKET_ERROR)
@@ -44,23 +45,12 @@ int	main(int argc, char **argv)
 		return (errno);
 	}
 	printf("Connected\n");
-	if (argc == 2)
+	gettimeofday(&time, NULL);
+	if (send(socket_client, (void *) &time, sizeof(struct timeval), 0) == -1)
 	{
-		if (send(socket_client, argv[1], strlen(argv[1]), 0) == -1)
-		{
-			perror("send");
-			close(socket_client);
-			return (errno);
-		}
-	}
-	else
-	{
-		if (write(socket_client, "No arg", 6) == -1)
-		{
-			perror("send");
-			close(socket_client);
-			return (errno);
-		}
+		perror("send");
+		close(socket_client);
+		return (errno);
 	}
 	close(socket_client);
 	return (0);

@@ -6,17 +6,19 @@
 /*   By: edelage <edelage@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 21:42:00 by edelage           #+#    #+#             */
-/*   Updated: 2023/03/08 21:42:00 by edelage          ###   ########lyon.fr   */
+/*   Updated: 2023/03/09 03:19:50 by edelage          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 #include "my_socket.h"
+#include <sys/time.h>
 
 static ssize_t 	receive_msg(int socket_fd);
+static size_t	diff_time(struct timeval start_time, struct timeval current_time);
 
 int	main(void)
 {
-	const char			*ip = "10.12.11.2";
-	const int			port = 14319;
+	const char			*ip = "192.168.1.134";
+	const int			port = 3000;
 	int					socket_server;
 	struct sockaddr_in	addr_server;
 	int					socket_client;
@@ -67,16 +69,23 @@ int	main(void)
 static ssize_t 	receive_msg(int socket_fd)
 {
 	ssize_t			len;
-	char			buf[1000];
-	const size_t	buf_size = 1000;
+	struct timeval	time;
+	struct timeval	time_at_end;
 
-	ft_memset(buf, 0, buf_size);
-	len = read(socket_fd, buf, buf_size - 1);
+	memset(&time, 0, sizeof(struct timeval));
+	len = read(socket_fd, &time, sizeof(struct timeval));
 	if (len == -1)
 	{
 		perror("recv");
 		return (-1);
 	}
-	printf("%s\n", buf);
+	gettimeofday(&time_at_end, NULL);
+	printf("%zu ms\n", diff_time(time, time_at_end));
 	return (len);
+}
+
+static size_t	diff_time(struct timeval start_time, struct timeval current_time)
+{
+	return ((size_t)(current_time.tv_sec - start_time.tv_sec) * 1000
+			+ (current_time.tv_usec - start_time.tv_usec) / 1000);
 }
