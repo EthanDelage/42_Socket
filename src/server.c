@@ -18,7 +18,7 @@ static size_t	diff_time(struct timeval start_time, struct timeval current_time);
 int	main(void)
 {
 	const char			*ip = "192.168.1.134";
-	const int			port = 3000;
+	const int			port = 12043;
 	int					socket_server;
 	struct sockaddr_in	addr_server;
 	int					socket_client;
@@ -80,6 +80,7 @@ static ssize_t 	receive_msg(int socket_fd)
 		return (-1);
 	}
 	gettimeofday(&time_at_end, NULL);
+	printf("second: %zu, micro: %zu\n", time.tv_sec, time.tv_usec);
 	printf("%zu ms\n", diff_time(time, time_at_end));
 	return (len);
 }

@@ -17,7 +17,7 @@ int	main(void)
 {
 	struct hostent		*hostinfo;
 	const char			*ip = "91.160.127.73";
-	const int			port = 3000;
+	const int			port = 12043;
 	int					socket_client;
 	struct sockaddr_in	addr;
 	struct timeval		time;
@@ -46,6 +46,7 @@ int	main(void)
 	}
 	printf("Connected\n");
 	gettimeofday(&time, NULL);
+	printf("second: %zu, micro: %zu\n", time.tv_sec, time.tv_usec);
 	if (send(socket_client, (void *) &time, sizeof(struct timeval), 0) == -1)
 	{
 		perror("send");
