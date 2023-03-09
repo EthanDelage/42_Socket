@@ -55,7 +55,9 @@ IFLAGS		=		-I $(INC_DIR) -I $(LIBFT_DIR)includes
 #######################
 
 
-all:				$(LIBFT) $(SERVER) $(CLIENT)
+all:				$(LIBFT)
+					$(MAKE) $(SERVER)
+					$(MAKE) $(CLIENT)
 
 -include			$(DEPS)
 
